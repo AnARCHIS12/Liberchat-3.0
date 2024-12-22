@@ -38,6 +38,10 @@
     <img src="https://img.icons8.com/fluency/48/000000/moon.png" width="30"/>
     <br />Thème Sombre
 </td>
+<td align="center">
+    <img src="https://img.icons8.com/fluency/48/000000/style.png" width="30"/>
+    <br />Style Moderne
+</td>
 </tr>
 </table>
 </div>
