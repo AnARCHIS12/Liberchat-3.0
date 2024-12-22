@@ -9,9 +9,9 @@
 [![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-**Une application de chat et de visioconférence nouvelle génération**
+**Une application de chat en temps réel nouvelle génération**
 
-[🌐 Demo](https://liberchat-3.onrender.com) | [📝 Documentation](#-documentation) | [🤝 Contribuer](#-contribution) | [📧 Contact](#-contact)
+[🌐 Demo](https://liberchat-3-0-1.onrender.com/) | [📝 Documentation](#-documentation) | [🤝 Contribuer](#-contribution) | [📧 Contact](#-contact)
 
 ---
 
@@ -23,8 +23,8 @@
 <table>
 <tr>
 <td align="center">
-    <img src="https://img.icons8.com/fluency/48/000000/video-call.png" width="30"/>
-    <br />Appels Vidéo HD
+    <img src="https://img.icons8.com/fluency/48/000000/comments.png" width="30"/>
+    <br />Chat en Temps Réel
 </td>
 <td align="center">
     <img src="https://img.icons8.com/fluency/48/000000/group.png" width="30"/>
@@ -44,20 +44,20 @@
 
 ### 🎯 Fonctionnalités Détaillées
 
-- 🎥 **Appels Vidéo**
-  - Qualité HD
-  - Mode plein écran
-  - Contrôles audio/vidéo
-  - Partage d'écran
-
 - 💬 **Chat en Temps Réel**
   - Messages instantanés
   - Indicateur de frappe
   - Historique des messages
   - Emojis et réactions
 
+- 👥 **Chat de Groupe**
+  - Discussions de groupe
+  - Liste des utilisateurs en ligne
+  - Notifications en temps réel
+  - Statuts de connexion
+
 - 🛡️ **Sécurité**
-  - Connexions WebRTC chiffrées
+  - Connexions sécurisées
   - Authentification utilisateur
   - Protection contre le spam
 
@@ -140,15 +140,15 @@ Start Command: npm start
    - Choisissez un nom d'utilisateur
    - Commencez à chatter !
 
-2. **Appels Vidéo**
-   - Cliquez sur l'icône vidéo
-   - Autorisez l'accès à la caméra
-   - Profitez de l'appel HD
-
-3. **Chat de Groupe**
+2. **Chat de Groupe**
    - Créez ou rejoignez un groupe
    - Invitez des participants
    - Communiquez en temps réel
+
+3. **Personnalisation**
+   - Choisissez votre nom d'utilisateur
+   - Utilisez des emojis
+   - Profitez du thème sombre
 
 <div align="center">
 
@@ -162,7 +162,7 @@ Start Command: npm start
     <img src="public/liberchat-logo.svg" width="200"/>
 </td>
 <td align="center">
-    <strong>Video Call</strong>
+    <strong>Dark Theme</strong>
     <br />
     <img src="public/liberchat-logo.svg" width="200"/>
 </td>
