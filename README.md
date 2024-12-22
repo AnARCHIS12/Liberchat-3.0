@@ -35,8 +35,8 @@
     <br />Sécurisé
 </td>
 <td align="center">
-    <img src="https://img.icons8.com/fluency/48/000000/responsive-design.png" width="30"/>
-    <br />Responsive
+    <img src="https://img.icons8.com/fluency/48/000000/palette.png" width="30"/>
+    <br />Thème Sombre
 </td>
 </tr>
 </table>
@@ -63,9 +63,9 @@
 
 - 🎨 **Interface**
   - Thème sombre élégant
-  - Design responsive
   - Animations fluides
   - Interface intuitive
+  - Style moderne
 
 ## 🚀 Démarrage Rapide
 
