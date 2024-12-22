@@ -27,8 +27,8 @@
     <br />Chat en Temps Réel
 </td>
 <td align="center">
-    <img src="https://img.icons8.com/fluency/48/000000/group.png" width="30"/>
-    <br />Chat de Groupe
+    <img src="https://img.icons8.com/fluency/48/000000/user-group-man-woman.png" width="30"/>
+    <br />Liste des Utilisateurs
 </td>
 <td align="center">
     <img src="https://img.icons8.com/fluency/48/000000/security-checked.png" width="30"/>
@@ -50,11 +50,11 @@
   - Historique des messages
   - Emojis et réactions
 
-- 👥 **Chat de Groupe**
-  - Discussions de groupe
+- 👥 **Gestion des Utilisateurs**
   - Liste des utilisateurs en ligne
-  - Notifications en temps réel
   - Statuts de connexion
+  - Notifications en temps réel
+  - Noms d'utilisateur uniques
 
 - 🛡️ **Sécurité**
   - Connexions sécurisées
@@ -140,15 +140,15 @@ Start Command: npm start
    - Choisissez un nom d'utilisateur
    - Commencez à chatter !
 
-2. **Chat de Groupe**
-   - Créez ou rejoignez un groupe
-   - Invitez des participants
-   - Communiquez en temps réel
+2. **Chat**
+   - Envoyez des messages instantanés
+   - Utilisez des emojis
+   - Voyez qui est en ligne
 
 3. **Personnalisation**
    - Choisissez votre nom d'utilisateur
-   - Utilisez des emojis
    - Profitez du thème sombre
+   - Interface intuitive
 
 <div align="center">
 
