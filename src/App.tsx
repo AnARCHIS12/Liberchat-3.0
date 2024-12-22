@@ -29,20 +29,27 @@ function App() {
 
   // Initialisation du socket
   useEffect(() => {
-    const newSocket = io('http://localhost:3001', {
-      transports: ['websocket', 'polling']
+    const newSocket = io('http://localhost:3000', {
+      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 20000
     });
 
     newSocket.on('connect', () => {
       console.log('Connecté au serveur');
       console.log('Socket connecté:', newSocket.id);
-      console.log('Socket ID:', newSocket.id);
       setError('');
     });
 
     newSocket.on('connect_error', (err) => {
       console.error('Erreur de connexion:', err);
-      setError('Erreur de connexion au serveur');
+      setError('Erreur de connexion au serveur. Tentative de reconnexion...');
+    });
+
+    newSocket.on('disconnect', (reason) => {
+      console.log('Déconnecté du serveur:', reason);
+      setError('Déconnecté du serveur. Tentative de reconnexion...');
     });
 
     setSocket(newSocket);

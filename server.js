@@ -10,17 +10,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST"],
+  credentials: true
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Serve static files from the dist directory
 app.use(express.static(join(__dirname, 'dist')));
-
-// Serve index.html for all routes
-app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'dist', 'index.html'));
-});
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -31,8 +30,10 @@ const io = new Server(server, {
     transports: ['websocket', 'polling']
   },
   maxHttpBufferSize: 50 * 1024 * 1024, // 50MB
-  pingTimeout: 120000, // 2 minutes pour les gros fichiers
-  pingInterval: 25000
+  pingTimeout: 60000,
+  pingInterval: 25000,
+  transports: ['websocket', 'polling'],
+  allowEIO3: true
 });
 
 // Configuration des logs
@@ -46,6 +47,17 @@ const logger = winston.createLogger({
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
     new winston.transports.File({ filename: 'combined.log' })
   ]
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple()
+  }));
+}
+
+// Gestion des erreurs WebSocket
+io.engine.on("connection_error", (err) => {
+  logger.error('Connection error:', err);
 });
 
 // Stockage en mémoire
@@ -75,7 +87,24 @@ const validateUsername = (username) => {
 };
 
 io.on('connection', (socket) => {
-  console.log('Nouvelle connexion:', socket.id);
+  logger.info('Nouvelle connexion:', socket.id);
+
+  socket.on('error', (error) => {
+    logger.error('Socket error:', error);
+  });
+
+  socket.on('disconnect', (reason) => {
+    logger.info('Client disconnected:', socket.id, 'Reason:', reason);
+    const user = users.get(socket.id);
+    if (user) {
+      console.log('Utilisateur déconnecté:', user.username);
+      logger.info(`User disconnected: ${user.username}`);
+      users.delete(socket.id);
+      usersByName.delete(user.username);
+      io.emit('users', Array.from(users.values()));
+      io.emit('userLeft', user.username);
+    }
+  });
 
   // Envoyer l'état initial
   socket.emit('init', {
@@ -139,22 +168,14 @@ io.on('connection', (socket) => {
     io.emit('chat message', message);
     console.log('Fichier diffusé à tous les utilisateurs');
   });
-
-  socket.on('disconnect', () => {
-    const user = users.get(socket.id);
-    if (user) {
-      console.log('Utilisateur déconnecté:', user.username);
-      logger.info(`User disconnected: ${user.username}`);
-      users.delete(socket.id);
-      usersByName.delete(user.username);
-      io.emit('users', Array.from(users.values()));
-      io.emit('userLeft', user.username);
-    }
-  });
 });
 
-// Démarrer le serveur
+// Serve index.html for all routes (doit être après les autres routes)
+app.get('*', (req, res) => {
+  res.sendFile(join(__dirname, 'dist', 'index.html'));
+});
+
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  logger.info(`Server is running on port ${PORT}`);
 });
