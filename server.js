@@ -9,34 +9,7 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const app = express();
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST"],
-  credentials: true
-}));
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-// Serve static files from the dist directory
-app.use(express.static(join(__dirname, 'dist')));
-
-const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
-    transports: ['websocket', 'polling']
-  },
-  maxHttpBufferSize: 50 * 1024 * 1024, // 50MB
-  pingTimeout: 60000,
-  pingInterval: 25000,
-  transports: ['websocket', 'polling'],
-  allowEIO3: true
-});
-
-// Configuration des logs
+// Configuration du logger
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.combine(
@@ -55,9 +28,36 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-// Gestion des erreurs WebSocket
-io.engine.on("connection_error", (err) => {
-  logger.error('Connection error:', err);
+const app = express();
+const server = createServer(app);
+
+// Configuration CORS
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
+
+// Configuration Socket.IO
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+    credentials: true
+  },
+  transports: ['websocket']
+});
+
+// Middleware Express pour servir les fichiers statiques
+app.use(express.static(join(__dirname, 'dist')));
+
+// Middleware Express pour parser les requêtes JSON
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Route par défaut
+app.get('*', (req, res) => {
+  res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
 
 // Stockage en mémoire
@@ -88,94 +88,100 @@ const validateUsername = (username) => {
 
 io.on('connection', (socket) => {
   logger.info('Nouvelle connexion:', socket.id);
+  console.log('Nouvelle connexion socket:', socket.id);
 
   socket.on('error', (error) => {
     logger.error('Socket error:', error);
+    console.error('Erreur socket:', error);
   });
 
-  socket.on('disconnect', (reason) => {
-    logger.info('Client disconnected:', socket.id, 'Reason:', reason);
-    const user = users.get(socket.id);
-    if (user) {
-      console.log('Utilisateur déconnecté:', user.username);
-      logger.info(`User disconnected: ${user.username}`);
-      users.delete(socket.id);
-      usersByName.delete(user.username);
-      io.emit('users', Array.from(users.values()));
-      io.emit('userLeft', user.username);
-    }
-  });
-
-  // Envoyer l'état initial
-  socket.emit('init', {
-    users: Array.from(users.values()),
-    messages: messages
-  });
-  console.log('État initial envoyé à', socket.id);
-
-  // Enregistrement d'un utilisateur
   socket.on('register', (username) => {
     try {
       validateUsername(username);
       
+      // Vérifier si le nom d'utilisateur est déjà pris
       if (usersByName.has(username)) {
-        socket.emit('registrationError', 'Username already exists');
-        console.log('Erreur d\'enregistrement pour', username, ': déjà existant');
+        socket.emit('registrationError', 'Ce nom est déjà pris');
         return;
       }
 
-      console.log(`Utilisateur enregistré: ${username}`);
-      logger.info(`User registered: ${username}`);
-      const userInfo = {
-        username,
-        socketId: socket.id,
-        isInCall: false
-      };
-      
-      users.set(socket.id, userInfo);
+      // Créer et enregistrer l'utilisateur
+      const user = { username, socketId: socket.id, isInCall: false };
+      users.set(socket.id, user);
       usersByName.set(username, socket.id);
-      
-      // Notifier tout le monde
+
+      // Envoyer les données initiales au nouvel utilisateur
+      socket.emit('init', {
+        messages: messages.slice(-50),
+        users: Array.from(users.values())
+      });
+
+      // Informer les autres utilisateurs
+      socket.broadcast.emit('userJoined', username);
       io.emit('users', Array.from(users.values()));
-      io.emit('userJoined', username);
-      console.log('Liste des utilisateurs mise à jour:', Array.from(users.values()));
+
+      logger.info(`Utilisateur enregistré: ${username}`);
     } catch (error) {
-      logger.error(`Registration error: ${error.message}`);
+      logger.error(`Erreur d'enregistrement pour ${username}:`, error);
       socket.emit('registrationError', error.message);
     }
   });
 
-  // Gestion des messages
+  socket.on('disconnect', (reason) => {
+    console.log('Déconnexion socket:', socket.id, 'Raison:', reason);
+    const user = users.get(socket.id);
+    if (user) {
+      users.delete(socket.id);
+      usersByName.delete(user.username);
+      io.emit('userLeft', user.username);
+      io.emit('users', Array.from(users.values()));
+      console.log('Utilisateur déconnecté:', user.username);
+    }
+  });
+
+  // Gestion des messages texte
   socket.on('chat message', (message) => {
-    console.log('Message reçu:', message);
+    const user = users.get(socket.id);
+    if (!user) return;
+
+    message.username = user.username;
+    message.timestamp = Date.now();
+    
     messages.push(message);
     io.emit('chat message', message);
-    console.log('Message diffusé à tous les utilisateurs');
+    logger.info(`Message reçu de ${user.username}`);
   });
 
   // Gestion des fichiers
   socket.on('file message', (fileData) => {
-    console.log('Fichier reçu de type:', fileData.fileType);
+    const user = users.get(socket.id);
+    if (!user) return;
+
     const message = {
       type: 'file',
-      username: users.get(socket.id)?.username,
+      username: user.username,
       fileData: fileData.fileData,
       fileType: fileData.fileType,
       fileName: fileData.fileName,
       timestamp: Date.now()
     };
+    
     messages.push(message);
     io.emit('chat message', message);
-    console.log('Fichier diffusé à tous les utilisateurs');
+    logger.info(`Fichier reçu de ${user.username}`);
   });
 });
 
-// Serve index.html for all routes (doit être après les autres routes)
-app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'dist', 'index.html'));
+// Gestion des erreurs WebSocket
+io.engine.on("connection_error", (err) => {
+  logger.error('Connection error:', err);
 });
 
+// Démarrage du serveur
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => {
-  logger.info(`Server is running on port ${PORT}`);
+server.listen(PORT, '127.0.0.1', () => {
+  logger.info(`Serveur démarré sur le port ${PORT}`);
+  console.log(`Serveur démarré sur le port ${PORT}`);
 });
+
+export default app;

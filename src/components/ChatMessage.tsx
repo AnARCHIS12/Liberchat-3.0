@@ -64,28 +64,26 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isOwnMessage }) => {
   };
 
   return (
-    <div className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-4 px-2 sm:px-4`}>
+    <div className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'} mb-3`}>
       <div className={`
-        max-w-[85%] sm:max-w-[70%]
-        rounded-lg 
-        p-2 sm:p-3
+        max-w-[90%] sm:max-w-[70%] rounded-none px-3 py-2 border-2
         ${isOwnMessage 
-          ? 'bg-red-900/40 text-red-100' 
-          : 'bg-gray-800/40 text-gray-100'
+          ? 'bg-red-900/80 border-red-600 text-red-100' 
+          : 'bg-black border-red-800 text-red-100'
         }
       `}>
-        <div className="flex items-baseline space-x-2 mb-1">
-          <span className={`
-            text-xs sm:text-sm font-semibold
-            ${isOwnMessage ? 'text-red-400' : 'text-gray-400'}
-          `}>
+        <div className="flex items-center gap-2 mb-1">
+          <span className={`text-sm ${isOwnMessage ? 'text-red-300' : 'text-red-400'}`}>
             {message.username}
           </span>
-          <span className="text-[10px] sm:text-xs text-gray-500">
+          <span className="text-red-600 text-base">☭</span>
+          <span className={`text-xs ${isOwnMessage ? 'text-red-400' : 'text-red-500'}`}>
             {formatTime(message.timestamp)}
           </span>
         </div>
-        {renderContent()}
+        <div className="text-sm sm:text-base break-words">
+          {renderContent()}
+        </div>
       </div>
     </div>
   );
