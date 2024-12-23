@@ -41,11 +41,15 @@ app.use(cors({
 // Configuration Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
+    origin: "*",
+    methods: ["GET", "POST"],
     credentials: true
   },
-  transports: ['websocket']
+  maxHttpBufferSize: 50 * 1024 * 1024, // 50MB pour les images
+  pingTimeout: 60000,
+  pingInterval: 25000,
+  transports: ['websocket', 'polling'], // Autoriser le fallback en polling
+  allowEIO3: true
 });
 
 // Middleware Express pour servir les fichiers statiques
@@ -86,13 +90,23 @@ const validateUsername = (username) => {
   }
 };
 
+io.engine.on("connection_error", (err) => {
+  console.error('Erreur de connexion Socket.IO:', err);
+  logger.error('Erreur de connexion Socket.IO:', err);
+});
+
 io.on('connection', (socket) => {
-  logger.info('Nouvelle connexion:', socket.id);
   console.log('Nouvelle connexion socket:', socket.id);
+  logger.info('Nouvelle connexion:', socket.id);
+
+  // Gérer la reconnexion
+  socket.on('reconnect_attempt', () => {
+    console.log('Tentative de reconnexion:', socket.id);
+  });
 
   socket.on('error', (error) => {
-    logger.error('Socket error:', error);
     console.error('Erreur socket:', error);
+    logger.error('Socket error:', error);
   });
 
   socket.on('register', (username) => {
@@ -154,27 +168,33 @@ io.on('connection', (socket) => {
 
   // Gestion des fichiers
   socket.on('file message', (fileData) => {
-    const user = users.get(socket.id);
-    if (!user) return;
+    try {
+      const user = users.get(socket.id);
+      if (!user) return;
 
-    const message = {
-      type: 'file',
-      username: user.username,
-      fileData: fileData.fileData,
-      fileType: fileData.fileType,
-      fileName: fileData.fileName,
-      timestamp: Date.now()
-    };
-    
-    messages.push(message);
-    io.emit('chat message', message);
-    logger.info(`Fichier reçu de ${user.username}`);
+      // Vérifier la taille du fichier
+      if (fileData.fileData.length > 50 * 1024 * 1024) { // 50MB max
+        socket.emit('error', 'Fichier trop volumineux (max 50MB)');
+        return;
+      }
+
+      const message = {
+        type: 'file',
+        username: user.username,
+        fileData: fileData.fileData,
+        fileType: fileData.fileType,
+        fileName: fileData.fileName,
+        timestamp: Date.now()
+      };
+      
+      messages.push(message);
+      io.emit('chat message', message);
+      console.log(`Fichier reçu de ${user.username} (${fileData.fileType})`);
+    } catch (error) {
+      console.error('Erreur lors du traitement du fichier:', error);
+      socket.emit('error', 'Erreur lors du traitement du fichier');
+    }
   });
-});
-
-// Gestion des erreurs WebSocket
-io.engine.on("connection_error", (err) => {
-  logger.error('Connection error:', err);
 });
 
 // Démarrage du serveur

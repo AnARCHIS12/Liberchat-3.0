@@ -1,96 +1,86 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 
 interface ChatInputProps {
-  onSendMessage: (content: string) => void;
+  onSendMessage: (message: string) => void;
   onSendFile: (file: File) => void;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onSendFile }) => {
   const [message, setMessage] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (message.trim()) {
       onSendMessage(message);
       setMessage('');
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      alert('Seules les images sont autorisées');
-      return;
-    }
+    try {
+      // Vérifier la taille du fichier
+      if (file.size > 50 * 1024 * 1024) { // 50MB
+        alert('Le fichier est trop volumineux (max 50MB)');
+        return;
+      }
 
-    if (file.size > 50 * 1024 * 1024) {
-      alert('Le fichier est trop volumineux (max 50MB)');
-      return;
-    }
+      // Vérifier le type de fichier
+      if (!file.type.startsWith('image/')) {
+        alert('Seules les images sont acceptées');
+        return;
+      }
 
-    onSendFile(file);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fileData = e.target?.result as string;
+        if (!fileData) {
+          alert('Erreur lors de la lecture du fichier');
+          return;
+        }
+        
+        onSendFile(file);
+      };
+      reader.onerror = () => {
+        alert('Erreur lors de la lecture du fichier');
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Erreur lors du traitement du fichier:', error);
+      alert('Erreur lors du traitement du fichier');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-3 p-4">
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="MESSAGE AUX CAMARADES..."
-        className="flex-1 h-12 px-4 bg-black border-2 border-red-800 text-red-100 placeholder-red-700 focus:outline-none focus:border-red-600 uppercase text-sm sm:text-base"
-      />
-      
-      <label className="cursor-pointer">
+    <div className="p-4 bg-black">
+      <div className="flex space-x-2">
         <input
-          ref={fileInputRef}
-          type="file"
-          onChange={handleFileChange}
-          accept="image/*"
-          className="hidden"
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
+          placeholder="MESSAGE AUX CAMARADES..."
+          className="flex-1 px-4 py-2 bg-black border-2 border-red-900 text-red-100 placeholder-red-800 focus:outline-none focus:border-red-600"
         />
-        <div className="w-12 h-12 flex items-center justify-center text-red-600 hover:text-red-500 border-2 border-red-800 hover:border-red-600 transition-colors">
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-        </div>
-      </label>
-
-      <button
-        type="submit"
-        className="w-12 h-12 flex items-center justify-center bg-red-800 hover:bg-red-900 text-red-100 border-2 border-red-600 transition-colors"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+        <label className="cursor-pointer px-4 py-2 bg-red-900/50 hover:bg-red-800 text-red-100 border border-red-700 transition-colors flex items-center">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileSelect}
+            className="hidden"
           />
-        </svg>
-      </button>
-    </form>
+          <span>📷</span>
+        </label>
+        <button
+          onClick={(e) => handleSubmit(e)}
+          className="px-4 py-2 bg-red-900/50 hover:bg-red-800 text-red-100 border border-red-700 transition-colors"
+        >
+          ➤
+        </button>
+      </div>
+    </div>
   );
 };
 
