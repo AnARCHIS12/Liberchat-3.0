@@ -126,7 +126,7 @@ npm run dev
 1. **Variables d'Environnement**
 ```env
 NODE_ENV=production
-PORT=10000
+PORT=3000
 ```
 
 2. **Configuration Render.com**
