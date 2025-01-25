@@ -1,0 +1,9 @@
+{
+	"appId": "com.liberchat.app",
+	"appName": "Liberchat",
+	"webDir": "dist",
+	"server": {
+		"url": "https://liberchat.fr",
+		"cleartext": true
+	}
+}

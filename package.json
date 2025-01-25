@@ -11,6 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^7.0.1",
+    "@capacitor/cli": "^7.0.1",
+    "@capacitor/core": "^7.0.1",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@types/simple-peer": "^9.11.8",
