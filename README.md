@@ -4,6 +4,7 @@
 
 <img src="public/images/liberchat-logo.svg" alt="Liberchat Logo" width="200"/>
 
+[![Version](https://img.shields.io/badge/Version-Beta%201.0.0-red?style=for-the-badge)](https://github.com/AnARCHIS12/Liberchat-3.0/releases)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
