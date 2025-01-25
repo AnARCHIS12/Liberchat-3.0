@@ -70,6 +70,13 @@
   - Interface intuitive
   - Style moderne
 
+## 📚 Documentation
+
+- [Guide d'installation](docs/Installation.md)
+- [Guide d'utilisation](docs/Utilisation.md)
+- [FAQ](docs/FAQ.md)
+- [Guide de contribution](docs/Contribution.md)
+
 ## 🚀 Démarrage Rapide
 
 ```bash
