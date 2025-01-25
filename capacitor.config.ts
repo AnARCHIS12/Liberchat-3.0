@@ -15,7 +15,8 @@ const config: CapacitorConfig = {
     backgroundColor: '#1a1a1a',
     contentInset: 'automatic',
     allowsLinkPreview: true,
-    scrollEnabled: true
+    scrollEnabled: true,
+    iconPath: 'public/images/liberchat-logo.svg'
   }
 };
 
