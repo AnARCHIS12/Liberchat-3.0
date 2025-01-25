@@ -1,51 +1,9 @@
 {
   "images": [
     {
-      "filename": "icons/icon-40.png",
-      "idiom": "iphone",
-      "scale": "2x",
-      "size": "20x20"
-    },
-    {
-      "filename": "icons/icon-60@3x.png",
-      "idiom": "iphone",
-      "scale": "3x",
-      "size": "20x20"
-    },
-    {
-      "filename": "icons/icon-40.png",
-      "idiom": "iphone",
-      "scale": "1x",
-      "size": "40x40"
-    },
-    {
-      "filename": "icons/icon-40@2x.png",
-      "idiom": "iphone",
-      "scale": "2x",
-      "size": "40x40"
-    },
-    {
-      "filename": "icons/icon-40@3x.png",
-      "idiom": "iphone",
-      "scale": "3x",
-      "size": "40x40"
-    },
-    {
-      "filename": "icons/icon-60@2x.png",
-      "idiom": "iphone",
-      "scale": "2x",
-      "size": "60x60"
-    },
-    {
-      "filename": "icons/icon-60@3x.png",
-      "idiom": "iphone",
-      "scale": "3x",
-      "size": "60x60"
-    },
-    {
-      "filename": "icons/icon-1024.png",
-      "idiom": "ios-marketing",
-      "scale": "1x",
+      "filename": "AppIcon-512@2x.png",
+      "idiom": "universal",
+      "platform": "ios",
       "size": "1024x1024"
     }
   ],
