@@ -83,6 +83,18 @@ npm install
 npm run dev
 ```
 
+## 📦 Releases
+
+### Dernière version
+[![Release](https://img.shields.io/badge/Release-Beta%201.0.0-red?style=for-the-badge)](https://github.com/AnARCHIS12/Liberchat-3.0/releases/tag/beta-1.0.0)
+
+La dernière version (Beta 1.0.0) inclut :
+- Le nouveau logo anarchiste (A dans un cercle)
+- L'interface de chat en temps réel
+- Le support des messages texte
+
+[➡️ Télécharger l'APK](https://github.com/AnARCHIS12/Liberchat-3.0/releases/download/beta-1.0.0/liberchat-1.0.0-beta-a-only.apk)
+
 <div align="center">
 
 ## 🛠️ Technologies Utilisées
