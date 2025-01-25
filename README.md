@@ -2,7 +2,7 @@
 
 # 🚀 Liberchat 3.0
 
-<img src="public/images/liberchat-logo.png" alt="Liberchat Logo" width="200"/>
+<img src="public/images/liberchat-logo.svg" alt="Liberchat Logo" width="200"/>
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -161,12 +161,12 @@ Start Command: npm start
 <td align="center">
     <strong>Chat Interface</strong>
     <br />
-    <img src="public/images/liberchat-logo.png" width="200"/>
+    <img src="public/images/liberchat-logo.svg" width="200"/>
 </td>
 <td align="center">
     <strong>Dark Theme</strong>
     <br />
-    <img src="public/images/liberchat-logo.png" width="200"/>
+    <img src="public/images/liberchat-logo.svg" width="200"/>
 </td>
 </tr>
 </table>
@@ -197,7 +197,7 @@ Distribué sous la licence MIT. Voir `LICENSE` pour plus d'informations.
 
 ---
 
-<img src="public/images/liberchat-logo.png" alt="Liberchat Logo" width="100"/>
+<img src="public/images/liberchat-logo.svg" alt="Liberchat Logo" width="100"/>
 
 **Made with ❤️ by [AnARCHIS12](https://github.com/AnARCHIS12)**
 
