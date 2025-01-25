@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code LiberChat</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</head>
+<body style="text-align: center; background: #1a1a1a; color: white; font-family: Arial;">
+    <h1>Scanner pour télécharger LiberChat</h1>
+    <div id="qrcode" style="margin: 20px auto;"></div>
+    <script>
+        new QRCode(document.getElementById("qrcode"), {
+            text: "https://github.com/AnARCHIS12/Liberchat-3.0/releases/download/beta-1.0.0/liberchat-1.0.0-beta-a-only.apk",
+            width: 256,
+            height: 256,
+            colorDark : "#ff4444",
+            colorLight : "#ffffff"
+        });
+    </script>
+</body>
+</html>
