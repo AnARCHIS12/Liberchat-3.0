@@ -5,8 +5,17 @@ const config: CapacitorConfig = {
   appName: 'Liberchat',
   webDir: 'dist',
   server: {
-    url: 'https://liberchat.fr',
-    cleartext: true
+    url: 'https://liberchat-3-0-1.onrender.com',
+    cleartext: true,
+    allowNavigation: ['liberchat-3-0-1.onrender.com'],
+    androidScheme: 'https',
+    iosScheme: 'https'
+  },
+  ios: {
+    contentInset: 'automatic',
+    allowsLinkPreview: true,
+    scrollEnabled: true,
+    webViewSuspended: false
   }
 };
 
