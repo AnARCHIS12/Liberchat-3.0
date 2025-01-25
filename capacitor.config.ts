@@ -12,10 +12,10 @@ const config: CapacitorConfig = {
     iosScheme: 'https'
   },
   ios: {
+    backgroundColor: '#1a1a1a',
     contentInset: 'automatic',
     allowsLinkPreview: true,
-    scrollEnabled: true,
-    webViewSuspended: false
+    scrollEnabled: true
   }
 };
 
