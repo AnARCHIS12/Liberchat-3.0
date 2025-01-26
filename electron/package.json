@@ -10,8 +10,20 @@
   "build": {
     "appId": "com.liberchat.desktop",
     "productName": "Liberchat",
+    "directories": {
+      "output": "dist"
+    },
     "win": {
-      "target": ["portable"]
+      "target": "nsis",
+      "icon": "../src/assets/liberchat-logo.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Liberchat",
+      "uninstallDisplayName": "Liberchat"
     }
   },
   "devDependencies": {

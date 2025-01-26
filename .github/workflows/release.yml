@@ -34,12 +34,12 @@ jobs:
           draft: false
           prerelease: false
           
-      - name: Upload Release Asset
+      - name: Upload Setup
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: electron/dist/win-unpacked/Liberchat.exe
-          asset_name: Liberchat-Windows.exe
+          asset_path: electron/dist/Liberchat Setup.exe
+          asset_name: Liberchat-Setup.exe
           asset_content_type: application/octet-stream
