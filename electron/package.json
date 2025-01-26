@@ -15,7 +15,10 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "../src/assets/liberchat-logo.ico"
+      "icon": "../android/app/src/main/res/drawable/ic_launcher_anarchist.xml",
+      "signingHashAlgorithms": ["sha256"],
+      "certificateFile": "cert.pfx",
+      "certificatePassword": "${{ secrets.WINDOWS_PFX_PASSWORD }}"
     },
     "nsis": {
       "oneClick": false,
