@@ -10,19 +10,40 @@
   "build": {
     "appId": "com.liberchat.desktop",
     "productName": "Liberchat",
+    "directories": {
+      "output": "dist"
+    },
     "win": {
-      "target": ["nsis"],
-      "icon": "assets/icon.png"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        }
+      ],
+      "category": "Network",
+      "icon": "assets/icon.ico",
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "nsis": {
-      "oneClick": false,
-      "perMachine": true,
+      "oneClick": true,
+      "perMachine": false,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "Liberchat",
-      "uninstallDisplayName": "Liberchat"
-    }
+      "deleteAppDataOnUninstall": true
+    },
+    "files": [
+      "**/*"
+    ],
+    "asar": true
   },
   "devDependencies": {
     "electron": "^22.3.27",
