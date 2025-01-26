@@ -10,23 +10,13 @@
   "build": {
     "appId": "com.liberchat.desktop",
     "productName": "Liberchat",
-    "directories": {
-      "output": "dist"
-    },
     "win": {
       "target": "nsis",
-      "icon": "assets/icon.png",
-      "signingHashAlgorithms": ["sha256"],
-      "certificateFile": "cert.pfx",
-      "certificatePassword": "${{ secrets.WINDOWS_PFX_PASSWORD }}"
+      "icon": "assets/icon.png"
     },
     "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "Liberchat",
-      "uninstallDisplayName": "Liberchat"
+      "oneClick": true,
+      "createDesktopShortcut": true
     }
   },
   "devDependencies": {

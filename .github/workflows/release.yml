@@ -21,20 +21,9 @@ jobs:
         working-directory: electron
         run: npm install
         
-      - name: Create Certificate
-        working-directory: electron
-        run: |
-          $cert = New-SelfSignedCertificate -DnsName "Liberchat" -Type CodeSigning -CertStoreLocation Cert:\CurrentUser\My
-          $password = ConvertTo-SecureString -String "${{ secrets.WINDOWS_PFX_PASSWORD }}" -Force -AsPlainText
-          $path = "cert.pfx"
-          Export-PfxCertificate -Cert "Cert:\CurrentUser\My\$($cert.Thumbprint)" -FilePath $path -Password $password
-        shell: powershell
-        
       - name: Build
         working-directory: electron
         run: npm run build
-        env:
-          WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASSWORD }}
         
       - name: List Files
         working-directory: electron/dist
@@ -49,11 +38,5 @@ jobs:
 
             Nouvelle version de Liberchat pour Windows !
 
-            ## Nouveautés
-            - Installation complète avec logo
-            - Raccourcis bureau et menu démarrer
-            - Désinstallation propre
-            - Support multiplateforme (Windows, Web)
-
             ## Installation
-            Téléchargez et lancez Liberchat-Setup.exe pour installer Liberchat sur Windows.
+            Téléchargez et lancez l'installateur pour installer Liberchat sur Windows.
