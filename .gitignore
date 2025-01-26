@@ -3,3 +3,12 @@ dist/
 .env
 *.log
 .DS_Store
+
+# Electron build
+electron/dist/
+electron/node_modules/
+
+# Ne pas ignorer
+!electron/package.json
+!electron/main.js
+!electron/assets/

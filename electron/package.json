@@ -11,12 +11,12 @@
     "appId": "com.liberchat.desktop",
     "productName": "Liberchat",
     "win": {
-      "target": "nsis",
-      "icon": "assets/icon.ico",
-      "signingHashAlgorithms": ["sha256"]
+      "target": ["nsis"],
+      "icon": "assets/icon.png"
     },
     "nsis": {
       "oneClick": false,
+      "perMachine": true,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
