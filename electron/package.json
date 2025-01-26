@@ -15,7 +15,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "../android/app/src/main/res/drawable/ic_launcher_anarchist.xml",
+      "icon": "assets/icon.png",
       "signingHashAlgorithms": ["sha256"],
       "certificateFile": "cert.pfx",
       "certificatePassword": "${{ secrets.WINDOWS_PFX_PASSWORD }}"
