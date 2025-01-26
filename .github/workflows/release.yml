@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       
@@ -23,23 +25,21 @@ jobs:
         working-directory: electron
         run: npm run build
         
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-          
-      - name: Upload Setup
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: electron/dist/Liberchat Setup.exe
-          asset_name: Liberchat-Setup.exe
-          asset_content_type: application/octet-stream
+          files: |
+            electron/dist/Liberchat Setup.exe
+          body: |
+            # Liberchat ${{ github.ref_name }}
+
+            Nouvelle version de Liberchat pour Windows !
+
+            ## Nouveautés
+            - Installation complète avec logo
+            - Raccourcis bureau et menu démarrer
+            - Désinstallation propre
+            - Support multiplateforme (Windows, Web)
+
+            ## Installation
+            Téléchargez et lancez Liberchat-Setup.exe pour installer Liberchat sur Windows.
