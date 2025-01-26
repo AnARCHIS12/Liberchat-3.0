@@ -24,10 +24,6 @@ jobs:
         working-directory: electron
         run: npm ci
 
-      - name: Check versions
-        working-directory: electron
-        run: npm list electron electron-builder
-          
       - name: Generate Certificate
         working-directory: electron
         shell: bash
@@ -52,11 +48,11 @@ jobs:
         run: |
           echo "Verifying build artifacts..."
           Get-ChildItem -Recurse
-          if (!(Test-Path *.exe)) {
-            Write-Error "No .exe file found in dist directory"
+          if (!(Test-Path "*Setup*.exe")) {
+            Write-Error "No installer found in dist directory"
             exit 1
           }
-          $exeFile = Get-ChildItem *.exe | Select-Object -First 1
+          $exeFile = Get-ChildItem "*Setup*.exe" | Select-Object -First 1
           Write-Output "Found installer: $($exeFile.Name)"
         
       - name: Release
@@ -72,23 +68,22 @@ jobs:
             Nouvelle version de Liberchat pour Windows !
 
             ## Installation
-            1. Téléchargez l'installateur (.exe)
+            1. Téléchargez l'installateur Liberchat Setup.exe
             2. Double-cliquez sur l'installateur
             3. Suivez les instructions d'installation
+            4. L'application sera installée avec son icône personnalisée
             
             ## Version
             ${{ github.ref_name }}
             
             ## Date de publication
-            ${{ format(github.event.repository.updated_at, 'D MMMM YYYY') }}
-            
-
+            ${{ format(github.event.repository.updated_at, 'DD/MM/YYYY') }}
 
             
             ## Notes de version
-            - Nouvelle version avec installateur Windows
+            - Installation Windows avec icône personnalisée
             - Interface utilisateur améliorée
-            - Corrections de bugs
+            - Raccourcis bureau et menu démarrer
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
