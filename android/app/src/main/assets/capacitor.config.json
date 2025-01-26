@@ -3,7 +3,7 @@
 	"appName": "Liberchat",
 	"webDir": "dist",
 	"server": {
-		"url": "https://liberchat.fr",
+		"url": "https://liberchat-3-0-1.onrender.com",
 		"cleartext": true
 	}
 }

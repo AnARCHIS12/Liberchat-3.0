@@ -8,31 +8,22 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+          
+      - name: Install Dependencies
+        working-directory: electron
+        run: npm install
         
-    - name: Install Dependencies
-      run: |
-        cd electron
-        npm install
-      shell: bash
+      - name: Build
+        working-directory: electron
+        run: npm run build
         
-    - name: Build Windows App
-      run: |
-        cd electron
-        npm run build
-      shell: bash
-        
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: windows-app
-        path: electron/dist/*.exe
-        compression-level: 0
-        retention-days: 5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Liberchat-Windows
+          path: electron/dist/win-unpacked/*
