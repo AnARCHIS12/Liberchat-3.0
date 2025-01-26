@@ -25,11 +25,14 @@ jobs:
         working-directory: electron
         run: npm run build
         
+      - name: List Files
+        working-directory: electron/dist
+        run: dir
+        
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            electron/dist/Liberchat Setup.exe
+          files: electron/dist/*.exe
           body: |
             # Liberchat ${{ github.ref_name }}
 
