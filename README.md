@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 Liberchat 3.0
+# 🚀 Liberchat 
 
 <img src="public/images/liberchat-logo.svg" alt="Liberchat Logo" width="200"/>
 
