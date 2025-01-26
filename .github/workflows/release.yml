@@ -12,23 +12,23 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: '16'
           cache: 'npm'
-          
+
       - name: Install Dependencies
         working-directory: electron
         run: npm ci
-          
+
       - name: Generate Certificate
         working-directory: electron
         shell: bash
         run: |
           openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=Liberchat"
           openssl pkcs12 -export -out cert.pfx -inkey key.pem -in cert.pem -passout pass:liberchat
-        
+
       - name: Build
         working-directory: electron
         env:
@@ -36,7 +36,7 @@ jobs:
           CSC_KEY_PASSWORD: liberchat
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build
-        
+
       - name: Verify Build
         working-directory: electron/dist
         shell: pwsh
@@ -47,9 +47,9 @@ jobs:
             Write-Error "No installer found in dist directory"
             exit 1
           }
-          $exeFile = Get-ChildItem "*Setup*.exe" | Select-Object -First 1
-          Write-Output "Found installer: $($exeFile.Name)"
-        
+          $installerFile = Get-ChildItem "*Setup*.exe" | Select-Object -First 1
+          Write-Output "Found installer: $($installerFile.Name)"
+
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -59,20 +59,20 @@ jobs:
           prerelease: false
           body: |
             # Liberchat ${{ github.ref_name }}
-            
+
             Nouvelle version de Liberchat pour Windows !
-            
+
             ## Installation
             1. Téléchargez l'installateur (.exe)
             2. Double-cliquez sur l'installateur
             3. Suivez les instructions d'installation
-            
+
             ## Version
             ${{ github.ref_name }}
-            
+
             ## Date de publication
             ${{ format(github.event.repository.updated_at, 'DD/MM/YYYY') }}
-            
+
             ## Notes de version
             - Nouvelle version avec installateur Windows
             - Interface utilisateur améliorée
@@ -88,5 +88,3 @@ jobs:
           Remove-Item -Path cert.pfx -Force -ErrorAction SilentlyContinue
           Remove-Item -Path key.pem -Force -ErrorAction SilentlyContinue
           Remove-Item -Path cert.pem -Force -ErrorAction SilentlyContinue
-
-
