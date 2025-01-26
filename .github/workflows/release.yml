@@ -21,8 +21,18 @@ jobs:
         working-directory: electron
         run: npm install
         
+      - name: Generate Certificate
+        working-directory: electron
+        run: |
+          openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=Liberchat"
+          openssl pkcs12 -export -out cert.pfx -inkey key.pem -in cert.pem -passout pass:liberchat
+        shell: bash
+        
       - name: Build
         working-directory: electron
+        env:
+          CSC_LINK: cert.pfx
+          CSC_KEY_PASSWORD: liberchat
         run: npm run build
         
       - name: List Files

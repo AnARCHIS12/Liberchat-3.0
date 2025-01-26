@@ -12,11 +12,16 @@
     "productName": "Liberchat",
     "win": {
       "target": "nsis",
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.png",
+      "signingHashAlgorithms": ["sha256"]
     },
     "nsis": {
-      "oneClick": true,
-      "createDesktopShortcut": true
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Liberchat",
+      "uninstallDisplayName": "Liberchat"
     }
   },
   "devDependencies": {
