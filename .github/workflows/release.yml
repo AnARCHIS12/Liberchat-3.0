@@ -11,40 +11,16 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '16'
           cache: 'npm'
           
-      - name: Verify Directory Structure
-        shell: pwsh
-        run: |
-          Write-Output "Current directory structure:"
-          Get-ChildItem -Recurse
-          if (!(Test-Path electron)) {
-            Write-Error "electron directory not found"
-            exit 1
-          }
-          
       - name: Install Dependencies
         working-directory: electron
-        run: |
-          npm ci
-          npm list electron electron-builder
-          
-      - name: Verify Package.json
-        working-directory: electron
-        shell: pwsh
-        run: |
-          if (!(Test-Path package.json)) {
-            Write-Error "package.json not found"
-            exit 1
-          }
-          Get-Content package.json
+        run: npm ci
           
       - name: Generate Certificate
         working-directory: electron
@@ -59,26 +35,20 @@ jobs:
           CSC_LINK: cert.pfx
           CSC_KEY_PASSWORD: liberchat
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Starting build process..."
-          npm run build
-          echo "Build process completed"
+        run: npm run build
         
-      - name: Verify Build Output
-        working-directory: electron
+      - name: Verify Build
+        working-directory: electron/dist
         shell: pwsh
         run: |
-          echo "Checking dist directory..."
-          if (!(Test-Path dist)) {
-            Write-Error "dist directory not found"
-            exit 1
-          }
-          echo "Listing dist directory contents:"
-          Get-ChildItem dist -Recurse
-          if (!(Test-Path "dist/*Setup*.exe")) {
+          echo "Verifying build artifacts..."
+          Get-ChildItem -Recurse
+          if (!(Test-Path "*Setup*.exe")) {
             Write-Error "No installer found in dist directory"
             exit 1
           }
+          $exeFile = Get-ChildItem "*Setup*.exe" | Select-Object -First 1
+          Write-Output "Found installer: $($exeFile.Name)"
         
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -89,9 +59,9 @@ jobs:
           prerelease: false
           body: |
             # Liberchat ${{ github.ref_name }}
-
+            
             Nouvelle version de Liberchat pour Windows !
-
+            
             ## Installation
             1. Téléchargez l'installateur (.exe)
             2. Double-cliquez sur l'installateur
@@ -118,4 +88,5 @@ jobs:
           Remove-Item -Path cert.pfx -Force -ErrorAction SilentlyContinue
           Remove-Item -Path key.pem -Force -ErrorAction SilentlyContinue
           Remove-Item -Path cert.pem -Force -ErrorAction SilentlyContinue
+
 
