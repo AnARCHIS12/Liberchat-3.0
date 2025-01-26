@@ -21,11 +21,13 @@ jobs:
       run: |
         cd electron
         npm install
+      shell: bash
         
     - name: Build Windows App
       run: |
         cd electron
         npm run build
+      shell: bash
         
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -33,3 +35,4 @@ jobs:
         name: windows-app
         path: electron/dist/*.exe
         compression-level: 0
+        retention-days: 5

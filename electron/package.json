@@ -27,8 +27,8 @@
   "license": "MIT",
   "keywords": [],
   "devDependencies": {
-    "electron": "^latest",
-    "electron-builder": "^latest",
-    "electron-updater": "^latest"
+    "electron": "^25.8.0",
+    "electron-builder": "^24.9.1",
+    "electron-updater": "^6.1.7"
   }
 }
