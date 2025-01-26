@@ -16,11 +16,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '16'
+          cache: 'npm'
           
       - name: Install Dependencies
         working-directory: electron
-        run: npm install
-        
+        run: |
+          npm ci
+          npm list electron electron-builder # Vérifier les versions installées
+          
       - name: Generate Certificate
         working-directory: electron
         run: |
@@ -33,20 +36,60 @@ jobs:
         env:
           CSC_LINK: cert.pfx
           CSC_KEY_PASSWORD: liberchat
-        run: npm run build
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Starting build process..."
+          npm run build
+          echo "Build process completed"
         
-      - name: List Files
+      - name: Verify Build
         working-directory: electron/dist
-        run: dir
+        run: |
+          echo "Verifying build artifacts..."
+          Get-ChildItem -Recurse
+          if (!(Test-Path *.exe)) {
+            Write-Error "No .exe file found in dist directory"
+            exit 1
+          }
+          $exeFile = Get-ChildItem *.exe | Select-Object -First 1
+          Write-Output "Found installer: $($exeFile.Name)"
+        shell: pwsh
         
       - name: Release
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: electron/dist/*.exe
+          draft: false
+          prerelease: false
           body: |
             # Liberchat ${{ github.ref_name }}
 
             Nouvelle version de Liberchat pour Windows !
 
             ## Installation
-            Téléchargez et lancez l'installateur pour installer Liberchat sur Windows.
+            1. Téléchargez l'installateur (.exe)
+            2. Double-cliquez sur l'installateur
+            3. Suivez les instructions d'installation
+            
+            ## Version
+            ${{ github.ref_name }}
+            
+            ## Date de publication
+            ${{ format(github.event.repository.updated_at, 'DD/MM/YYYY') }}
+            
+            ## Notes de version
+            - Nouvelle version avec installateur Windows
+            - Interface utilisateur améliorée
+            - Corrections de bugs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cleanup
+        if: always()
+        working-directory: electron
+        run: |
+          Remove-Item -Path cert.pfx -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path key.pem -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path cert.pem -Force -ErrorAction SilentlyContinue
+        shell: pwsh
