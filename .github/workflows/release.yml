@@ -35,7 +35,8 @@ jobs:
           CSC_LINK: cert.pfx
           CSC_KEY_PASSWORD: liberchat
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run build
+          USE_HARD_LINKS: false
+        run: npm run build -- --win nsis
 
       - name: Verify Build
         working-directory: electron/dist
