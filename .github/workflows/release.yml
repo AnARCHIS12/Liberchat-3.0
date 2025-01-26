@@ -20,10 +20,32 @@ jobs:
           node-version: '16'
           cache: 'npm'
           
+      - name: Verify Directory Structure
+        shell: pwsh
+        run: |
+          Write-Output "Current directory structure:"
+          Get-ChildItem -Recurse
+          if (!(Test-Path electron)) {
+            Write-Error "electron directory not found"
+            exit 1
+          }
+          
       - name: Install Dependencies
         working-directory: electron
-        run: npm ci
-
+        run: |
+          npm ci
+          npm list electron electron-builder
+          
+      - name: Verify Package.json
+        working-directory: electron
+        shell: pwsh
+        run: |
+          if (!(Test-Path package.json)) {
+            Write-Error "package.json not found"
+            exit 1
+          }
+          Get-Content package.json
+          
       - name: Generate Certificate
         working-directory: electron
         shell: bash
@@ -42,18 +64,21 @@ jobs:
           npm run build
           echo "Build process completed"
         
-      - name: Verify Build
-        working-directory: electron/dist
+      - name: Verify Build Output
+        working-directory: electron
         shell: pwsh
         run: |
-          echo "Verifying build artifacts..."
-          Get-ChildItem -Recurse
-          if (!(Test-Path "*Setup*.exe")) {
+          echo "Checking dist directory..."
+          if (!(Test-Path dist)) {
+            Write-Error "dist directory not found"
+            exit 1
+          }
+          echo "Listing dist directory contents:"
+          Get-ChildItem dist -Recurse
+          if (!(Test-Path "dist/*Setup*.exe")) {
             Write-Error "No installer found in dist directory"
             exit 1
           }
-          $exeFile = Get-ChildItem "*Setup*.exe" | Select-Object -First 1
-          Write-Output "Found installer: $($exeFile.Name)"
         
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -68,22 +93,20 @@ jobs:
             Nouvelle version de Liberchat pour Windows !
 
             ## Installation
-            1. Téléchargez l'installateur Liberchat Setup.exe
+            1. Téléchargez l'installateur (.exe)
             2. Double-cliquez sur l'installateur
             3. Suivez les instructions d'installation
-            4. L'application sera installée avec son icône personnalisée
             
             ## Version
             ${{ github.ref_name }}
             
             ## Date de publication
             ${{ format(github.event.repository.updated_at, 'DD/MM/YYYY') }}
-
             
             ## Notes de version
-            - Installation Windows avec icône personnalisée
+            - Nouvelle version avec installateur Windows
             - Interface utilisateur améliorée
-            - Raccourcis bureau et menu démarrer
+            - Corrections de bugs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
