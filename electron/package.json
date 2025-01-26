@@ -1,0 +1,34 @@
+{
+  "name": "liberchat",
+  "version": "1.0.0",
+  "description": "Liberchat Desktop App",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.liberchat.desktop",
+    "productName": "Liberchat",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "../public/images/liberchat-logo.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  },
+  "author": "Delphine Soufflet",
+  "license": "MIT",
+  "keywords": [],
+  "devDependencies": {
+    "electron": "^latest",
+    "electron-builder": "^latest",
+    "electron-updater": "^latest"
+  }
+}
