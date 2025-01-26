@@ -12,7 +12,7 @@
     "productName": "Liberchat",
     "win": {
       "target": "nsis",
-      "icon": "assets/icon-1024.png",
+      "icon": "assets/icon.ico",
       "signingHashAlgorithms": ["sha256"]
     },
     "nsis": {
